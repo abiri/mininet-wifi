@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Mininet install script for Ubuntu (and Debian Wheezy+)
+# Mininet install script for Ubuntu (and Kali Wheezy+)
 # Brandon Heller (brandonh@stanford.edu)
 # Modified by Ramon Fontes (ramonreisfontes@gmail.com)
 
@@ -14,7 +14,7 @@ set -o nounset
 MININET_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd -P )"
 
 # Set up build directory, which by default is the working directory
-#  unless the working directory is a subdirectory of mininet, 
+#  unless the working directory is a subdirectory of mininet,
 #  in which case we use the directory containing mininet
 BUILD_DIR="$(pwd -P)"
 case $BUILD_DIR in
@@ -34,9 +34,9 @@ ARCH=`uname -m`
 if [ "$ARCH" = "x86_64" ]; then ARCH="amd64"; fi
 if [ "$ARCH" = "i686" ]; then ARCH="i386"; fi
 
-test -e /etc/debian_version && DIST="Debian"
+test -e /etc/debian_version && DIST="Kali"
 grep Ubuntu /etc/lsb-release &> /dev/null && DIST="Ubuntu"
-if [ "$DIST" = "Ubuntu" ] || [ "$DIST" = "Debian" ]; then
+if [ "$DIST" = "Ubuntu" ] || [ "$DIST" = "Kali" ]; then
     install='sudo apt-get -y install'
     remove='sudo apt-get -y remove'
     pkginst='sudo dpkg -i'
@@ -69,8 +69,8 @@ echo "Detected Linux distribution: $DIST $RELEASE $CODENAME $ARCH"
 KERNEL_NAME=`uname -r`
 KERNEL_HEADERS=kernel-headers-${KERNEL_NAME}
 
-if ! echo $DIST | egrep 'Ubuntu|Debian|Fedora'; then
-    echo "Install.sh currently only supports Ubuntu, Debian and Fedora."
+if ! echo $DIST | egrep 'Ubuntu|Kali|Fedora'; then
+    echo "Install.sh currently only supports Ubuntu, Kali and Fedora."
     exit 1
 fi
 
@@ -186,7 +186,7 @@ function mn_dev {
 # The following will cause a full OF install, covering:
 # -user switch
 # The instructions below are an abbreviated version from
-# http://www.openflowswitch.org/wk/index.php/Debian_Install
+# http://www.openflowswitch.org/wk/index.php/Kali_Install
 function of {
     echo "Installing OpenFlow reference implementation..."
     cd $BUILD_DIR
@@ -296,8 +296,8 @@ function ubuntuOvs {
     OVS_SRC=$BUILD_DIR/openvswitch
     OVS_TARBALL_LOC=http://openvswitch.org/releases
 
-    if ! echo "$DIST" | egrep "Ubuntu|Debian" > /dev/null; then
-        echo "OS must be Ubuntu or Debian"
+    if ! echo "$DIST" | egrep "Ubuntu|Kali" > /dev/null; then
+        echo "OS must be Ubuntu or Kali"
         $cd BUILD_DIR
         return
     fi
@@ -306,8 +306,8 @@ function ubuntuOvs {
         cd $BUILD_DIR
         return
     fi
-    if [ "$DIST" = "Debian" ] && ! version_ge $RELEASE 7.0; then
-        echo "Debian version must be >= 7.0"
+    if [ "$DIST" = "Kali" ] && ! version_ge $RELEASE 7.0; then
+        echo "Kali version must be >= 7.0"
         cd $BUILD_DIR
         return
     fi
@@ -352,7 +352,7 @@ function ubuntuOvs {
     sudo ovs-vsctl show
     # Switch can run on its own, but
     # Mininet should control the controller
-    # This appears to only be an issue on Ubuntu/Debian
+    # This appears to only be an issue on Ubuntu/Kali
     if sudo service openvswitch-controller stop 2>/dev/null; then
         echo "Stopped running controller"
     fi
@@ -375,7 +375,7 @@ function ovs {
     if [ "$DIST" = "Ubuntu" ] && ! version_ge $RELEASE 14.04; then
         # Older Ubuntu versions need openvswitch-datapath/-dkms
         # Manually installing openvswitch-datapath may be necessary
-        # for manually built kernel .debs using Debian's defective kernel
+        # for manually built kernel .debs using Kali's defective kernel
         # packaging, which doesn't yield usable headers.
         if ! dpkg --get-selections | grep openvswitch-datapath; then
             # If you've already installed a datapath, assume you
@@ -389,7 +389,7 @@ function ovs {
     if $install openvswitch-controller; then
         # Switch can run on its own, but
         # Mininet should control the controller
-        # This appears to only be an issue on Ubuntu/Debian
+        # This appears to only be an issue on Ubuntu/Kali
         if sudo service openvswitch-controller stop; then
             echo "Stopped running controller"
         fi
@@ -448,7 +448,7 @@ function ryu {
 
     # install Ryu dependencies"
     $install autoconf automake g++ libtool python make
-    if [ "$DIST" = "Ubuntu" -o "$DIST" = "Debian" ]; then
+    if [ "$DIST" = "Ubuntu" -o "$DIST" = "Kali" ]; then
         $install gcc python-pip python-dev libffi-dev libssl-dev \
             libxml2-dev libxslt1-dev zlib1g-dev
     fi
@@ -474,7 +474,7 @@ function nox {
     # Install NOX deps:
     $install autoconf automake g++ libtool python python-twisted \
 		swig libssl-dev make
-    if [ "$DIST" = "Debian" ]; then
+    if [ "$DIST" = "Kali" ]; then
         $install libboost1.35-dev
     elif [ "$DIST" = "Ubuntu" ]; then
         $install python-dev libboost-dev
@@ -522,7 +522,7 @@ function nox13 {
     # Install NOX deps:
     $install autoconf automake g++ libtool python python-twisted \
         swig libssl-dev make
-    if [ "$DIST" = "Debian" ]; then
+    if [ "$DIST" = "Kali" ]; then
         $install libboost1.35-dev
     elif [ "$DIST" = "Ubuntu" ]; then
         $install python-dev libboost-dev
@@ -675,7 +675,7 @@ net.ipv6.conf.lo.disable_ipv6 = 1' | sudo tee -a /etc/sysctl.conf > /dev/null
     git config --global color.branch auto
 
     # Reduce boot screen opt-out delay. Modify timeout in /boot/grub/menu.lst to 1:
-    if [ "$DIST" = "Debian" ]; then
+    if [ "$DIST" = "Kali" ]; then
         sudo sed -i -e 's/^timeout.*$/timeout         1/' /boot/grub/menu.lst
     fi
 
