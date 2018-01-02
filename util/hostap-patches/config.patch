@@ -58,7 +58,7 @@ index 521d877..62eff91 100644
 
  # Remove debugging code that is printing out debug messages to stdout.
  # This can be used to reduce the size of the hostapd considerably if debugging
-@@ -328,4 +328,4 @@ CONFIG_IPV6=y
+@@ -325,4 +325,4 @@ CONFIG_IPV6=y
  # For more details refer to:
  # http://wireless.kernel.org/en/users/Documentation/acs
  #
@@ -147,7 +147,7 @@ diff --git wpa_supplicant/p2p_supplicant.c wpa_supplicant/p2p_supplicant.c
 index 73bed57..cadd748 100644
 --- wpa_supplicant/p2p_supplicant.c
 +++ wpa_supplicant/p2p_supplicant.c
-@@ -92,7 +92,7 @@
+@@ -89,7 +89,7 @@
  #define P2P_MAX_INITIAL_CONN_WAIT_GO_REINVOKE 15
  #endif /* P2P_MAX_INITIAL_CONN_WAIT_GO_REINVOKE */
 
